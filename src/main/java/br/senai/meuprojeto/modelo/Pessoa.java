@@ -19,6 +19,7 @@ public class Pessoa {
     private String nome;
     private String telefone;
     private Integer idade;
+
     private LocalDate dataContrato;
     private BigDecimal salario;
 
