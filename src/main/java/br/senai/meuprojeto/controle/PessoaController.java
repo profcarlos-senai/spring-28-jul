@@ -3,12 +3,16 @@ package br.senai.meuprojeto.controle;
 import br.senai.meuprojeto.PessoaDTO;
 import br.senai.meuprojeto.modelo.Pessoa;
 import br.senai.meuprojeto.repositorio.PessoaRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -38,8 +42,29 @@ public class PessoaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // se der certo, responde com 204 (criado)
-    public Pessoa criaPessoa(@RequestBody Pessoa pessoa) {
-        return pessoaRepository.save(pessoa);
+    public ResponseEntity<?> criaPessoa(@RequestBody Pessoa pessoa) {
+        // cria um mapa de campo/erro caso tenha erros pra devolver
+        Map<String, String> erros = new HashMap<String, String>();
+        // testa os dados
+        if (pessoa.getNome() == null || pessoa.getNome().isBlank()) {
+            erros.put("nome","Nome não pode ficar em branco");
+        }
+        if (pessoa.getIdade() != null && pessoa.getIdade() <= 0) {
+            erros.put("idade", "Nem nasceu ainda e já tá cadastrado num sistema. Tadinho :'(");
+        }
+        if (pessoa.getDataContrato().isAfter(LocalDate.now())){
+            erros.put("dataContrato", "Data de contratação não pode ser no futuro");
+        }
+        // se tiver erros, retorna 400 bad request
+        if(!erros.isEmpty()){
+            return ResponseEntity.badRequest().body(erros);
+        }
+
+        // se chegou vivo aqui, pode salvar
+        pessoa = pessoaRepository.save(pessoa);
+
+        // devolve a pessoa com status 200 (ok)
+        return ResponseEntity.ok(pessoa);
     }
 
     @PutMapping("{id}")
