@@ -5,6 +5,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,6 +20,7 @@ public class Pessoa {
     private Long id;
 
     private String nome;
+    @NotEmpty(message = "telefone não pode ficar em branco")
     private String telefone;
     private Integer idade;
 

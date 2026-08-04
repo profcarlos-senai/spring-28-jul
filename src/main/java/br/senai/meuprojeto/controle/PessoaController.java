@@ -44,7 +44,7 @@ public class PessoaController {
     @ResponseStatus(HttpStatus.CREATED) // se der certo, responde com 204 (criado)
     public ResponseEntity<?> criaPessoa(@RequestBody Pessoa pessoa) {
         // cria um mapa de campo/erro caso tenha erros pra devolver
-        Map<String, String> erros = new HashMap<String, String>();
+        Map<String, String> erros = new HashMap<>();
         // testa os dados
         if (pessoa.getNome() == null || pessoa.getNome().isBlank()) {
             erros.put("nome","Nome não pode ficar em branco");
